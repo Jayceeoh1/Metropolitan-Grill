@@ -26,51 +26,69 @@ export default function MenuPage() {
   }, [activeCategory, search, sortBy])
 
   return (
-    <div className="page-enter pt-16">
+    <div className="page-enter pt-16 min-h-screen">
       {/* Header */}
-      <div className="bg-[#111] border-b border-white/5 py-10">
+      <div className="bg-[#111] border-b border-white/5 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-xs font-bold tracking-[3px] uppercase text-[#e74c3c] mb-2">Descoperă</p>
-          <h1 className="font-bebas text-5xl sm:text-6xl text-white">
+          <p className="text-xs font-bold tracking-[3px] uppercase text-[#e74c3c] mb-2">Descopera</p>
+          <h1 className="font-bebas text-4xl sm:text-6xl text-white">
             MENIU <span className="text-[#f39c12]">COMPLET</span>
           </h1>
-          <p className="text-[#b8a99a] mt-2">
-            {PRODUCTS.length} produse · Personalizabile · Livrare în 30 de minute
+          <p className="text-[#b8a99a] mt-1 text-sm">
+            {PRODUCTS.length} produse · Personalizabile · Livrare in Gaesti
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Search + Sort bar */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+
+        {/* Search + Sort */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a6e66]" />
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#7a6e66]" />
             <input
               type="text"
-              placeholder="Caută în meniu..."
+              placeholder="Cauta in meniu..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full bg-[#1a1a1a] border border-white/8 text-white placeholder-[#7a6e66] rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#c0392b]/50"
+              className="w-full bg-[#1a1a1a] border border-white/8 text-white placeholder-[#7a6e66] rounded-xl py-3 pl-9 pr-4 text-sm focus:outline-none focus:border-[#c0392b]/50"
             />
           </div>
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value)}
-            className="bg-[#1a1a1a] border border-white/8 text-[#b8a99a] rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#c0392b]/50 sm:w-48"
+            className="bg-[#1a1a1a] border border-white/8 text-[#b8a99a] rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#c0392b]/50 sm:w-44"
           >
             <option value="default">Sortare: Implicit</option>
-            <option value="price-asc">Preț: Crescător</option>
-            <option value="price-desc">Preț: Descrescător</option>
-            <option value="promo">Doar Promoții</option>
+            <option value="price-asc">Pret: Crescator</option>
+            <option value="price-desc">Pret: Descrescator</option>
+            <option value="promo">Doar Promotii</option>
           </select>
         </div>
 
-        <div className="flex gap-8 items-start">
-          {/* Sidebar */}
-          <aside className="hidden lg:block w-56 shrink-0 sticky top-20">
+        {/* Mobile category chips - scrollable */}
+        <div className="flex gap-2 overflow-x-auto pb-3 mb-5 lg:hidden" style={{scrollbarWidth:'none'}}>
+          {ALL_CATS.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                activeCategory === cat.id
+                  ? 'bg-[#c0392b] border-[#c0392b] text-white'
+                  : 'bg-[#1a1a1a] border-white/8 text-[#b8a99a]'
+              }`}
+            >
+              <span>{cat.icon}</span> {cat.name}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-6 items-start">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block w-52 shrink-0 sticky top-20">
             <div className="bg-[#1a1a1a] border border-white/8 rounded-[18px] p-4">
               <p className="text-xs font-bold uppercase tracking-[2px] text-[#7a6e66] mb-3">Categorii</p>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {ALL_CATS.map(cat => (
                   <button
                     key={cat.id}
@@ -81,65 +99,31 @@ export default function MenuPage() {
                         : 'text-[#b8a99a] hover:bg-white/5'
                     }`}
                   >
-                    <span className="text-lg w-6 text-center">{cat.icon}</span>
+                    <span className="text-base w-5 text-center">{cat.icon}</span>
                     <span className="font-medium">{cat.name}</span>
                   </button>
                 ))}
-                <div className="border-t border-white/5 pt-2 mt-2">
-                  <p className="text-xs font-bold uppercase tracking-[2px] text-[#7a6e66] mb-2 px-1">Filtre</p>
-                  <button
-                    onClick={() => setSortBy('promo')}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all text-left ${sortBy === 'promo' ? 'bg-[#c0392b]/15 text-[#e74c3c]' : 'text-[#b8a99a] hover:bg-white/5'}`}
-                  >
-                    <span className="text-lg w-6 text-center">🔥</span>
-                    <span className="font-medium">Promoții Active</span>
-                  </button>
-                  <button
-                    onClick={() => setActiveCategory('all')}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-[#b8a99a] hover:bg-white/5 transition-all text-left"
-                  >
-                    <span className="text-lg w-6 text-center">⭐</span>
-                    <span className="font-medium">Bestseller</span>
-                  </button>
-                </div>
               </div>
             </div>
           </aside>
 
-          {/* Mobile category chips */}
-          <div className="lg:hidden w-full -mt-2 mb-2">
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {ALL_CATS.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
-                    activeCategory === cat.id
-                      ? 'bg-[#c0392b] border-[#c0392b] text-white'
-                      : 'bg-[#1a1a1a] border-white/8 text-[#b8a99a]'
-                  }`}
-                >
-                  {cat.icon} {cat.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Products grid */}
-          <div className="flex-1">
+          {/* Products */}
+          <div className="flex-1 min-w-0">
             {filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-24 text-center">
-                <span className="text-6xl mb-4">🔍</span>
-                <p className="font-condensed text-xl font-bold text-[#7a6e66] uppercase tracking-wide">Niciun produs găsit</p>
-                <p className="text-sm text-[#7a6e66] mt-2">Încearcă alt termen de căutare sau categorie</p>
-                <button onClick={() => { setSearch(''); setActiveCategory('all') }} className="mt-6 px-6 py-3 bg-[#c0392b]/20 border border-[#c0392b]/30 text-[#e74c3c] rounded-xl font-condensed font-bold text-sm uppercase tracking-wide">
-                  Resetează filtrele
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <span className="text-5xl mb-4">🔍</span>
+                <p className="font-condensed text-xl font-bold text-[#7a6e66] uppercase">Niciun produs gasit</p>
+                <button
+                  onClick={() => { setSearch(''); setActiveCategory('all') }}
+                  className="mt-4 px-6 py-2 bg-[#c0392b]/20 border border-[#c0392b]/30 text-[#e74c3c] rounded-xl font-condensed font-bold text-sm uppercase"
+                >
+                  Reseteaza
                 </button>
               </div>
             ) : (
               <>
-                <p className="text-sm text-[#7a6e66] mb-5">{filtered.length} produse găsite</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                <p className="text-sm text-[#7a6e66] mb-4">{filtered.length} produse gasite</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {filtered.map(p => <ProductCard key={p.id} product={p} />)}
                 </div>
               </>
