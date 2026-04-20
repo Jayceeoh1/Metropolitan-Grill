@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const ADMIN_PASSWORD = 'metropolitan2025'
+const ADMIN_PASSWORD = 'Alinmetropolitan2026#!'
 
 export default function AdminLoginPage() {
   const router = useRouter()
