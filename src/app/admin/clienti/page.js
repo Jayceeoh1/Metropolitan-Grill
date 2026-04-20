@@ -1,30 +1,58 @@
 'use client'
-import toast from 'react-hot-toast'
-
-const CLIENTS = [
-  { name: 'Ion Popescu', email: 'ion.p@email.ro', phone: '0721 234 567', orders: 24, total: 1840, since: 'Mar 2024' },
-  { name: 'Maria Ion', email: 'maria.i@email.ro', phone: '0732 567 890', orders: 18, total: 1250, since: 'Apr 2024' },
-  { name: 'Andrei Niculescu', email: 'andrei.n@email.ro', phone: '0741 890 123', orders: 31, total: 2670, since: 'Ian 2024' },
-  { name: 'Elena Mihăilescu', email: 'elena.m@email.ro', phone: '0752 123 456', orders: 9, total: 720, since: 'Oct 2024' },
-  { name: 'Radu Georgescu', email: 'radu.g@email.ro', phone: '0761 345 678', orders: 15, total: 1100, since: 'Iun 2024' },
-]
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function AdminClientiPage() {
+  const [clients, setClients] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      const supabase = createClient()
+      const { data: orders } = await supabase
+        .from('orders')
+        .select('full_name, phone, email, total, created_at')
+        .order('created_at', { ascending: false })
+
+      if (orders) {
+        // Group by phone number
+        const map = {}
+        orders.forEach(o => {
+          const key = o.phone
+          if (!map[key]) {
+            map[key] = {
+              name: o.full_name,
+              phone: o.phone,
+              email: o.email || '—',
+              orders: 0,
+              total: 0,
+              since: new Date(o.created_at).toLocaleDateString('ro-RO', { month: 'short', year: 'numeric' }),
+            }
+          }
+          map[key].orders++
+          map[key].total += Number(o.total)
+        })
+        setClients(Object.values(map).sort((a, b) => b.orders - a.orders))
+      }
+      setLoading(false)
+    }
+    fetchClients()
+  }, [])
+
   return (
     <div className="page-enter">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-bebas text-4xl text-white">CLIENȚI</h1>
-        <button onClick={() => toast.success('Export CSV generat!')} className="bg-gradient-to-r from-[#c0392b] to-[#96251e] text-white font-condensed font-bold text-sm uppercase tracking-wide px-5 py-2.5 rounded-xl hover:from-[#e74c3c] hover:to-[#c0392b] transition-all">
-          Export CSV
-        </button>
+        <div>
+          <h1 className="font-bebas text-4xl text-white">CLIENTI</h1>
+          <p className="text-sm text-[#7a6e66] mt-1">{clients.length} clienti unici</p>
+        </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         {[
-          { label: 'Total Clienți', value: '2.847' },
-          { label: 'Clienți Noi Luna Aceasta', value: '143' },
-          { label: 'Valoare Medie Comandă', value: '67 lei' },
+          { label: 'Total Clienti', value: clients.length },
+          { label: 'Total Comenzi', value: clients.reduce((s, c) => s + c.orders, 0) },
+          { label: 'Valoare Totala', value: clients.reduce((s, c) => s + c.total, 0).toFixed(0) + ' lei' },
         ].map(s => (
           <div key={s.label} className="bg-[#1a1a1a] border border-white/8 rounded-[14px] p-5">
             <p className="text-xs font-bold uppercase tracking-wide text-[#7a6e66] mb-2">{s.label}</p>
@@ -34,30 +62,32 @@ export default function AdminClientiPage() {
       </div>
 
       <div className="bg-[#1a1a1a] border border-white/8 rounded-[18px] overflow-hidden">
-        <table className="admin-table w-full">
-          <thead>
-            <tr>
-              <th>Client</th><th>Email</th><th>Telefon</th><th>Comenzi</th><th>Total Cheltuit</th><th>Înregistrat</th><th>Acțiuni</th>
-            </tr>
-          </thead>
-          <tbody>
-            {CLIENTS.map(c => (
-              <tr key={c.email}>
-                <td className="text-white font-medium">{c.name}</td>
-                <td>{c.email}</td>
-                <td>{c.phone}</td>
-                <td className="text-[#f39c12] font-bold">{c.orders}</td>
-                <td className="text-white">{c.total.toLocaleString()} lei</td>
-                <td>{c.since}</td>
-                <td>
-                  <button onClick={() => toast.success(`Profil ${c.name}`)} className="text-xs border border-white/10 text-[#7a6e66] px-3 py-1.5 rounded-lg hover:text-white hover:border-white/20 transition-all">
-                    Vezi Profil
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {loading ? (
+          <div className="p-8 text-center text-[#7a6e66]">Se incarca clientii...</div>
+        ) : clients.length === 0 ? (
+          <div className="p-8 text-center">
+            <span className="text-4xl block mb-3">👥</span>
+            <p className="text-[#7a6e66]">Nicio comanda plasata inca</p>
+          </div>
+        ) : (
+          <table className="admin-table w-full">
+            <thead>
+              <tr><th>Client</th><th>Telefon</th><th>Email</th><th>Comenzi</th><th>Total Cheltuit</th><th>Prima Comanda</th></tr>
+            </thead>
+            <tbody>
+              {clients.map((c, i) => (
+                <tr key={i}>
+                  <td className="text-white font-medium">{c.name}</td>
+                  <td>{c.phone}</td>
+                  <td>{c.email}</td>
+                  <td className="text-[#f39c12] font-bold">{c.orders}</td>
+                  <td className="text-white">{c.total.toFixed(0)} lei</td>
+                  <td>{c.since}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )

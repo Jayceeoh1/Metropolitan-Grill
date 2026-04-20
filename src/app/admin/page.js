@@ -1,40 +1,78 @@
+'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-
-const STATS = [
-  { label: 'Comenzi Astăzi', value: '47', change: '↑ +12%', up: true },
-  { label: 'Venituri Astăzi', value: '2.840 lei', change: '↑ +8%', up: true },
-  { label: 'Timp Mediu Livrare', value: "26'", change: '↓ −2 min', up: true },
-  { label: 'Rating Mediu', value: '4.9 ★', change: 'Excelent', up: true },
-]
-
-const RECENT_ORDERS = [
-  { id: '#MG-847', client: 'Ion Popescu', items: 'Shaorma ×2, Cola', total: '61 lei', status: 'prep', statusLabel: '⏳ Preparare' },
-  { id: '#MG-846', client: 'Maria Ion', items: 'Burger BBQ, Cartofi', total: '47 lei', status: 'done', statusLabel: '✓ Livrat' },
-  { id: '#MG-845', client: 'Andrei N.', items: 'Family Bucket', total: '149 lei', status: 'new', statusLabel: '◉ Nouă' },
-  { id: '#MG-844', client: 'Elena M.', items: 'Meniu Duo, Sos', total: '95 lei', status: 'prep', statusLabel: '⏳ Preparare' },
-]
-
-const STATUS_STYLE = {
-  prep: 'bg-yellow-900/20 text-yellow-400 border-yellow-800/30',
-  done: 'bg-green-900/20 text-green-400 border-green-800/30',
-  new: 'bg-blue-900/20 text-blue-400 border-blue-800/30',
-}
+import { createClient } from '@/lib/supabase/client'
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState({ today: 0, revenue: 0, total: 0, new: 0 })
+  const [recentOrders, setRecentOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const supabase = createClient()
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      const { data: orders } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (orders) {
+        const todayOrders = orders.filter(o => new Date(o.created_at) >= today)
+        const todayRevenue = todayOrders.reduce((s, o) => s + Number(o.total), 0)
+        const newOrders = orders.filter(o => o.status === 'new')
+
+        setStats({
+          today: todayOrders.length,
+          revenue: todayRevenue,
+          total: orders.length,
+          new: newOrders.length,
+        })
+        setRecentOrders(orders.slice(0, 5))
+      }
+      setLoading(false)
+    }
+    fetchStats()
+  }, [])
+
+  const STATUS_STYLE = {
+    new: 'bg-blue-900/20 text-blue-400 border-blue-800/30',
+    accepted: 'bg-purple-900/20 text-purple-400 border-purple-800/30',
+    preparing: 'bg-yellow-900/20 text-yellow-400 border-yellow-800/30',
+    delivered: 'bg-green-900/20 text-green-400 border-green-800/30',
+    cancelled: 'bg-red-900/20 text-red-400 border-red-800/30',
+  }
+
+  const STATUS_LABELS = {
+    new: 'Noua', accepted: 'Acceptata', preparing: 'Preparare',
+    ready: 'Gata', delivery: 'Livrare', delivered: 'Livrata', cancelled: 'Anulata',
+  }
+
+  const formatTime = (ts) => {
+    const d = new Date(ts)
+    return d.toLocaleDateString('ro-RO') + ' ' + d.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })
+  }
+
   return (
     <div className="page-enter">
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-bebas text-4xl text-white">DASHBOARD</h1>
-        <span className="text-sm text-[#7a6e66]">15 Ianuarie 2025</span>
+        <span className="text-sm text-[#7a6e66]">{new Date().toLocaleDateString('ro-RO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {STATS.map(stat => (
-          <div key={stat.label} className="bg-[#1a1a1a] border border-white/8 rounded-[14px] p-5">
+        {[
+          { label: 'Comenzi Astazi', value: loading ? '...' : stats.today },
+          { label: 'Venituri Astazi', value: loading ? '...' : stats.revenue + ' lei' },
+          { label: 'Comenzi Noi', value: loading ? '...' : stats.new, alert: stats.new > 0 },
+          { label: 'Total Comenzi', value: loading ? '...' : stats.total },
+        ].map(stat => (
+          <div key={stat.label} className={`bg-[#1a1a1a] border rounded-[14px] p-5 ${stat.alert ? 'border-[#c0392b]/40' : 'border-white/8'}`}>
             <p className="text-xs font-bold uppercase tracking-wide text-[#7a6e66] mb-2">{stat.label}</p>
-            <p className="font-bebas text-4xl text-[#f39c12] leading-none mb-1">{stat.value}</p>
-            <p className={`text-xs ${stat.up ? 'text-green-400' : 'text-[#e74c3c]'}`}>{stat.change}</p>
+            <p className={`font-bebas text-4xl leading-none ${stat.alert ? 'text-[#e74c3c]' : 'text-[#f39c12]'}`}>{stat.value}</p>
           </div>
         ))}
       </div>
@@ -47,33 +85,39 @@ export default function AdminDashboard() {
             Vezi toate →
           </Link>
         </div>
-        <table className="admin-table w-full">
-          <thead>
-            <tr>
-              <th>#Comandă</th><th>Client</th><th>Produse</th><th>Total</th><th>Status</th><th>Acțiuni</th>
-            </tr>
-          </thead>
-          <tbody>
-            {RECENT_ORDERS.map(order => (
-              <tr key={order.id}>
-                <td className="text-[#f39c12] font-bold">{order.id}</td>
-                <td>{order.client}</td>
-                <td>{order.items}</td>
-                <td className="text-white">{order.total}</td>
-                <td>
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full border ${STATUS_STYLE[order.status]}`}>
-                    {order.statusLabel}
-                  </span>
-                </td>
-                <td>
-                  <Link href="/admin/comenzi" className="text-xs border border-[#c0392b]/30 text-[#e74c3c] px-3 py-1.5 rounded-lg hover:bg-[#c0392b]/10 transition-all">
-                    Detalii
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {loading ? (
+          <div className="p-8 text-center text-[#7a6e66]">Se incarca...</div>
+        ) : recentOrders.length === 0 ? (
+          <div className="p-8 text-center">
+            <span className="text-4xl block mb-3">📭</span>
+            <p className="text-[#7a6e66]">Nicio comanda inca</p>
+          </div>
+        ) : (
+          <table className="admin-table w-full">
+            <thead>
+              <tr><th>#Comanda</th><th>Client</th><th>Telefon</th><th>Produse</th><th>Total</th><th>Ora</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              {recentOrders.map(order => (
+                <tr key={order.id}>
+                  <td className="text-[#f39c12] font-bold font-condensed">{order.order_number}</td>
+                  <td className="text-white font-medium">{order.full_name}</td>
+                  <td>{order.phone}</td>
+                  <td className="text-xs max-w-[160px] truncate">
+                    {(order.items || []).map(i => i.name + ' x' + i.qty).join(', ')}
+                  </td>
+                  <td className="text-white font-bold">{order.total} lei</td>
+                  <td className="text-xs">{formatTime(order.created_at)}</td>
+                  <td>
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${STATUS_STYLE[order.status] || STATUS_STYLE.new}`}>
+                      {STATUS_LABELS[order.status] || order.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )
