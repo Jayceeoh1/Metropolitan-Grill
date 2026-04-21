@@ -6,18 +6,40 @@ import './globals.css'
 
 export const metadata = {
   title: 'Metropolitan Shaorma & Grill',
-  description: 'Shaorma premium, grătar autentic și livrare rapidă în București. Comandă online!',
-  keywords: 'shaorma, grill, livrare, bucuresti, metropolitan, fast food',
+  description: 'Shaorma premium, gratar autentic si livrare rapida in Gaesti. Comanda online!',
+  keywords: 'shaorma, grill, livrare, gaesti, metropolitan, fast food',
+  manifest: '/manifest.json',
+  themeColor: '#c0392b',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Metropolitan',
+  },
   openGraph: {
     title: 'Metropolitan Shaorma & Grill',
-    description: 'Shaorma premium, gust autentic, livrare în 30 de minute.',
+    description: 'Shaorma premium, gust autentic, livrare rapida in Gaesti.',
     type: 'website',
   },
+}
+
+export const viewport = {
+  themeColor: '#c0392b',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ro">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Metropolitan" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
       <body>
         <Navbar />
         <CartDrawer />
