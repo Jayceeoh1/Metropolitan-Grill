@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
     e.preventDefault()
     if (password === ADMIN_PASSWORD) {
       sessionStorage.setItem('admin_auth', 'true')
-      router.push('/admin')
+      router.push('/panou-alin')
     } else {
       setError(true)
       setPassword('')
