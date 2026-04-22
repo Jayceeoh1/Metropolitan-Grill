@@ -7,12 +7,23 @@ import ProductModal from '@/components/menu/ProductModal'
 import { createPortal } from 'react-dom'
 
 const BADGE_STYLES = {
-  bestseller: 'badge-gold', promo: 'badge-red', premium: 'badge-gold',
-  nou: 'badge-green', family: 'badge-green', recomandat: 'badge-green', picant: 'badge-red',
+  bestseller: 'badge-gold',
+  promo: 'badge-red',
+  premium: 'badge-gold',
+  nou: 'badge-green',
+  family: 'badge-green',
+  recomandat: 'badge-green',
+  picant: 'badge-red',
 }
+
 const BADGE_LABELS = {
-  bestseller: 'Best', promo: 'Promo', premium: 'Premium',
-  nou: 'Nou', family: 'Family', recomandat: 'Recomandat', picant: 'Picant',
+  bestseller: 'Best',
+  promo: 'Promo',
+  premium: 'Premium',
+  nou: 'Nou',
+  family: 'Family',
+  recomandat: 'Recomandat',
+  picant: 'Picant',
 }
 
 export default function ProductCard({ product }) {
@@ -34,29 +45,19 @@ export default function ProductCard({ product }) {
         className="product-card bg-[#1a1a1a] border border-white/8 rounded-[18px] overflow-hidden cursor-pointer group"
         onClick={() => setModalOpen(true)}
       >
-        {/* Image area */}
-        <div className="h-48 flex items-center justify-center relative bg-gradient-to-br from-[#222] to-[#1a1a1a] overflow-hidden">
+        <div className="h-44 flex items-center justify-center relative bg-[#111] overflow-hidden">
           {product.image ? (
-            <>
-              {/* Imagine cu zoom la hover */}
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                style={{ objectPosition: 'center' }}
-              />
-              {/* Overlay gradient jos */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent opacity-80" />
-              {/* Overlay rosu la hover */}
-              <div className="absolute inset-0 bg-[#c0392b]/0 group-hover:bg-[#c0392b]/10 transition-all duration-300" />
-            </>
+            <img
+              src={product.image}
+              alt={product.name}
+              className="h-40 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            />
           ) : (
             <span className="text-7xl transition-transform duration-300 group-hover:scale-110">{product.icon}</span>
           )}
 
-          {/* Badges */}
           {product.badges.length > 0 && (
-            <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+            <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
               {product.badges.slice(0, 2).map(b => (
                 <span key={b} className={BADGE_STYLES[b] || 'badge-green'}>
                   {BADGE_LABELS[b] || b}
@@ -65,20 +66,14 @@ export default function ProductCard({ product }) {
             </div>
           )}
 
-          {/* Buton adauga apare la hover pe imagine */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-10">
-            <div className="bg-[#c0392b] text-white font-condensed font-bold text-sm uppercase tracking-wide px-5 py-2 rounded-xl shadow-xl transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-              Vezi Detalii
-            </div>
-          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
         </div>
 
-        {/* Body */}
         <div className="p-4">
-          <h3 className="font-condensed font-bold text-lg uppercase tracking-wide text-white mb-1 leading-tight group-hover:text-[#f39c12] transition-colors duration-200">
+          <h3 className="font-condensed font-bold text-lg uppercase tracking-wide text-white mb-1 leading-tight">
             {product.name}
           </h3>
-          <p className="text-xs text-[#7a6e66] leading-relaxed mb-3 line-clamp-2">
+          <p className="text-xs text-[#7a6e66] leading-relaxed mb-4 line-clamp-2">
             {product.description}
           </p>
           {product.weight && (
@@ -94,7 +89,7 @@ export default function ProductCard({ product }) {
             </div>
             <button
               onClick={handleQuickAdd}
-              className="w-9 h-9 rounded-xl bg-[#c0392b] hover:bg-[#e74c3c] flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 shadow-lg shadow-red-900/30"
+              className="w-9 h-9 rounded-xl bg-[#c0392b] hover:bg-[#e74c3c] flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95"
             >
               <Plus size={18} />
             </button>
@@ -103,7 +98,11 @@ export default function ProductCard({ product }) {
       </div>
 
       {modalOpen && typeof window !== 'undefined' && createPortal(
-        <ProductModal product={product} open={modalOpen} onClose={() => setModalOpen(false)} />,
+        <ProductModal
+          product={product}
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+        />,
         document.body
       )}
     </>
