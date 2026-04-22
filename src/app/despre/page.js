@@ -5,7 +5,7 @@ export const metadata = { title: 'Despre Noi — Metropolitan Shaorma & Grill' }
 const VALUES = [
   { icon: '🥩', title: 'Carne Premium', desc: 'Selectăm zilnic carne proaspătă de la fermieri locali. Nicio bucată congelată în bucătăria noastră.' },
   { icon: '⚡', title: 'Livrare în 30\'', desc: 'Flota noastră de curieri asigură livrarea în 30 de minute sau comanda este gratuită.' },
-  { icon: '🌱', title: 'Ingrediente Locale', desc: 'Legumele și condimentele provin de la producători locali din zona București-Ilfov.' },
+  { icon: '🌱', title: 'Ingrediente Locale', desc: 'Legumele și condimentele provin de la producători locali din zona Găești și împrejurimi.' },
 ]
 
 const TEAM = [
@@ -102,8 +102,9 @@ export default function DesprePage() {
         <div className="bg-[#1a1a1a] border border-white/8 rounded-[18px] h-56 flex items-center justify-center text-center">
           <div>
             <span className="text-5xl block mb-3">📍</span>
-            <p className="font-condensed font-bold text-lg text-white uppercase tracking-wide">Str. Mihai Eminescu 42, Sector 2, București</p>
-            <p className="text-sm text-[#7a6e66] mt-1">Luni–Vineri: 10:00–23:00 · Sâmbătă–Duminică: 10:00–24:00</p>
+            <p className="font-condensed font-bold text-lg text-white uppercase tracking-wide">Str. 13 Decembrie nr. 69, Găești</p>
+            <p className="text-sm text-[#b8a99a] mt-1">📞 0758-793-231</p>
+            <p className="text-sm text-[#7a6e66] mt-1">Lu–Vi: 10:00–22:00 · Sâm–Dum: 10:00–23:00</p>
           </div>
         </div>
       </div>

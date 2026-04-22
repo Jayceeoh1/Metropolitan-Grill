@@ -101,7 +101,7 @@ export default function DesprePage() {
         {/* Map placeholder */}
         <div className="rounded-[18px] overflow-hidden border border-white/8" style={{height: '240px'}}>
           <iframe
-            src="https://maps.google.com/maps?q=Strada+13+Decembrie+69+Gaesti+Dambovita+Romania&t=&z=17&ie=UTF8&iwloc=&output=embed"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d501.18012637254435!2d25.325809670632836!3d44.71751085248066!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b2895e042420c5%3A0xa679ccf524d9fe0e!2sMetropolitan%20Shaorma%20%26%20Grill!5e0!3m2!1sro!2sro!4v1776888012214!5m2!1sro!2sro"
             width="100%"
             height="240"
             style={{ border: 0, display: 'block' }}
