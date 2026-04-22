@@ -7,18 +7,18 @@ const NAV_GROUPS = [
   {
     label: 'Principal',
     items: [
-      { href: '/admin', icon: '📊', label: 'Dashboard' },
-      { href: '/admin/comenzi', icon: '📦', label: 'Comenzi' },
-      { href: '/admin/meniu', icon: '🌯', label: 'Meniu' },
-      { href: '/admin/clienti', icon: '👥', label: 'Clienti' },
+      { href: '/panou-alin', icon: '📊', label: 'Dashboard' },
+      { href: '/panou-alin/comenzi', icon: '📦', label: 'Comenzi' },
+      { href: '/panou-alin/meniu', icon: '🌯', label: 'Meniu' },
+      { href: '/panou-alin/clienti', icon: '👥', label: 'Clienti' },
     ],
   },
   {
     label: 'Configurare',
     items: [
-      { href: '/admin/setari', icon: '⚙️', label: 'Setari' },
-      { href: '/admin/livrare', icon: '🛵', label: 'Livrare' },
-      { href: '/admin/promotii', icon: '🏷', label: 'Promotii' },
+      { href: '/panou-alin/setari', icon: '⚙️', label: 'Setari' },
+      { href: '/panou-alin/livrare', icon: '🛵', label: 'Livrare' },
+      { href: '/panou-alin/promotii', icon: '🏷', label: 'Promotii' },
     ],
   },
 ]
@@ -31,8 +31,8 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => {
     const auth = sessionStorage.getItem('admin_auth')
-    if (!auth && pathname !== '/admin/login') {
-      router.push('/admin/login')
+    if (!auth && pathname !== '/panou-alin/login') {
+      router.push('/panou-alin/login')
     } else {
       setAuthorized(true)
     }
@@ -41,11 +41,10 @@ export default function AdminLayout({ children }) {
 
   const logout = () => {
     sessionStorage.removeItem('admin_auth')
-    router.push('/admin/login')
+    router.push('/panou-alin/login')
   }
 
-  // Show login page without layout
-  if (pathname === '/admin/login') {
+  if (pathname === '/panou-alin/login') {
     return <>{children}</>
   }
 
