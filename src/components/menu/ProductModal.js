@@ -94,9 +94,9 @@ export default function ProductModal({ product, open, onClose }) {
       <div className="bg-[#111] border border-white/8 rounded-[24px] w-full max-w-lg max-h-[90vh] overflow-y-auto">
 
         {/* Image */}
-        <div className="h-48 flex items-center justify-center bg-gradient-to-br from-[#222] to-[#1a1a1a] rounded-t-[24px] relative overflow-hidden">
+        <div className="h-48 flex items-center justify-center bg-[#111] rounded-t-[24px] relative overflow-hidden">
           {product.image ? (
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+            <img src={product.image} alt={product.name} className="h-40 w-auto object-contain drop-shadow-2xl" />
           ) : (
             <span className="text-[90px]">{product.icon}</span>
           )}
