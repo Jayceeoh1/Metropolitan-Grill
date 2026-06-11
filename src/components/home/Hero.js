@@ -1,121 +1,197 @@
 'use client'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Hero() {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => { setTimeout(() => setVisible(true), 100) }, [])
+
   return (
-    <section className="relative min-h-[88vh] flex items-center overflow-hidden">
-      <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(192,57,43,0.18) 0%, transparent 60%), radial-gradient(ellipse 40% 50% at 80% 20%, rgba(243,156,18,0.1) 0%, transparent 50%), linear-gradient(135deg, #0a0a0a 0%, #1a0a08 50%, #0a0a0a 100%)'}} />
-      <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full pointer-events-none" style={{background: 'rgba(192,57,43,0.1)', filter: 'blur(120px)'}} />
+    <section
+      className="relative min-h-[90vh] flex items-center overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #080808 0%, #120400 50%, #080808 100%)' }}
+    >
+      {/* Animated background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(241,196,15,0.4), transparent)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(231,76,60,0.3), transparent)' }} />
+        {/* Glow orbs */}
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full animate-neon-pulse" style={{ background: 'radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        <div className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full animate-neon-pulse" style={{ background: 'radial-gradient(circle, rgba(241,196,15,0.08) 0%, transparent 70%)', filter: 'blur(40px)', animationDelay: '1s' }} />
+        {/* Grid */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+      </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full py-16">
-        {/* Desktop: grid 2 col / Mobile: stack */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 w-full py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* Text content */}
-          <div>
-            <div className="inline-flex items-center gap-2 bg-[#c0392b]/15 border border-[#c0392b]/30 rounded-full px-4 py-2 text-xs font-bold tracking-[2px] uppercase text-[#e74c3c] mb-6">
-              🔥 Grill Autentic · Livrare Rapida
+          {/* Left content */}
+          <div style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(30px)', transition: 'all 0.8s ease' }}>
+            {/* Badge */}
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-[2px] mb-6"
+              style={{ background: 'rgba(231,76,60,0.12)', border: '1px solid rgba(231,76,60,0.3)', color: '#e74c3c' }}
+            >
+              <span style={{ animation: 'flicker 3s infinite' }}>🔥</span>
+              Grill Autentic · Livrare Rapida
             </div>
 
-            <h1 className="font-bebas text-[72px] sm:text-[90px] lg:text-[110px] leading-[0.9] text-white mb-3">
+            {/* Title */}
+            <h1
+              className="font-bebas leading-none mb-2"
+              style={{
+                fontSize: 'clamp(70px, 10vw, 120px)',
+                color: '#fff',
+                letterSpacing: '3px',
+                textShadow: '0 0 40px rgba(255,255,255,0.1)',
+              }}
+            >
               SHAORMA
-              <span className="block text-[#f39c12]">PREMIUM</span>
             </h1>
-
-            <p className="font-condensed text-xl sm:text-2xl text-[#e74c3c] font-bold tracking-[3px] uppercase mb-5">
+            <h1
+              className="font-bebas leading-none mb-4 animate-flicker"
+              style={{
+                fontSize: 'clamp(70px, 10vw, 120px)',
+                color: '#f1c40f',
+                letterSpacing: '3px',
+                textShadow: '0 0 20px rgba(241,196,15,0.8), 0 0 60px rgba(241,196,15,0.3)',
+              }}
+            >
+              PREMIUM
+            </h1>
+            <p
+              className="font-condensed font-bold uppercase tracking-[4px] mb-6"
+              style={{
+                fontSize: 'clamp(16px, 2.5vw, 24px)',
+                color: '#e74c3c',
+                textShadow: '0 0 15px rgba(231,76,60,0.5)',
+              }}
+            >
               Savoare Urbana Autentica
             </p>
-
-            <p className="text-sm sm:text-base text-[#b8a99a] leading-relaxed max-w-md mb-8">
+            <p className="text-base leading-relaxed mb-10 max-w-md" style={{ color: '#b8a99a' }}>
               Carne proaspata la gratar, ingrediente selectionate si sosuri artizanale.
               Metropolitan Grill — gustul care te aduce mereu inapoi.
             </p>
 
-            <div className="flex flex-wrap gap-3 mb-8">
-              <Link href="/meniu"
-                className="flex items-center gap-2 bg-gradient-to-r from-[#c0392b] to-[#96251e] hover:from-[#e74c3c] hover:to-[#c0392b] text-white font-condensed font-bold text-base sm:text-lg uppercase tracking-wide px-6 sm:px-8 py-3.5 rounded-xl transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-red-900/40">
+            {/* CTA buttons */}
+            <div className="flex flex-wrap gap-4 mb-12">
+              <Link
+                href="/meniu"
+                className="flex items-center gap-2 font-condensed font-bold text-lg uppercase tracking-wide px-8 py-4 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #c0392b, #96251e)',
+                  color: '#fff',
+                  boxShadow: '0 0 20px rgba(192,57,43,0.4), 0 8px 25px rgba(192,57,43,0.2)',
+                }}
+              >
                 🍖 Comanda Acum
               </Link>
-              <Link href="/meniu"
-                className="flex items-center gap-2 bg-transparent border border-white/20 hover:border-[#f39c12] text-white hover:text-[#f39c12] font-condensed font-bold text-base sm:text-lg uppercase tracking-wide px-6 sm:px-8 py-3.5 rounded-xl transition-all">
+              <Link
+                href="/meniu"
+                className="flex items-center gap-2 font-condensed font-bold text-lg uppercase tracking-wide px-8 py-4 rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'transparent',
+                  border: '1.5px solid rgba(241,196,15,0.4)',
+                  color: '#f1c40f',
+                  boxShadow: '0 0 15px rgba(241,196,15,0.1)',
+                }}
+              >
                 Vezi Meniu →
               </Link>
             </div>
 
             {/* Stats */}
-            <div className="flex gap-6 sm:gap-8">
+            <div className="flex gap-8">
               {[
-                { num: '4.9★', label: 'Rating Clienti' },
-                { num: "30'", label: 'Timp Livrare' },
-                { num: '2k+', label: 'Comenzi Zilnice' },
+                { num: '4.9★', label: 'Rating Clienti', color: '#f1c40f' },
+                { num: "30'", label: 'Timp Livrare', color: '#e74c3c' },
+                { num: '2k+', label: 'Comenzi Zilnice', color: '#2ecc71' },
               ].map(stat => (
                 <div key={stat.label}>
-                  <div className="font-bebas text-3xl sm:text-4xl text-[#f39c12] leading-none">{stat.num}</div>
-                  <div className="text-[10px] text-[#7a6e66] uppercase tracking-wide mt-1">{stat.label}</div>
+                  <div
+                    className="font-bebas text-4xl leading-none"
+                    style={{ color: stat.color, textShadow: `0 0 15px ${stat.color}80` }}
+                  >
+                    {stat.num}
+                  </div>
+                  <div className="text-xs uppercase tracking-wide mt-1" style={{ color: '#7a6e66' }}>{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Shaorma image — shown on both mobile and desktop */}
-          <div className="flex items-center justify-center">
-            <div className="relative w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] lg:w-[460px] lg:h-[460px]">
-              {/* Glow rings */}
-              <div className="absolute inset-0 rounded-full animate-spin" style={{border: '1px solid rgba(192,57,43,0.15)', animationDuration: '18s'}} />
-              <div className="absolute inset-6 rounded-full animate-spin" style={{border: '1px dashed rgba(243,156,18,0.1)', animationDuration: '12s', animationDirection: 'reverse'}} />
-
+          {/* Right - Shaorma image */}
+          <div
+            className="flex items-center justify-center"
+            style={{ opacity: visible ? 1 : 0, transition: 'all 1s ease 0.3s' }}
+          >
+            <div className="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px]">
+              {/* Rotating rings */}
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: '1px solid rgba(241,196,15,0.15)',
+                  animation: 'rotateGlow 15s linear infinite',
+                }}
+              />
+              <div
+                className="absolute inset-8 rounded-full"
+                style={{
+                  border: '1px dashed rgba(231,76,60,0.1)',
+                  animation: 'rotateGlow 10s linear infinite reverse',
+                }}
+              />
               {/* Glow */}
-              <div className="absolute inset-0 rounded-full animate-pulse" style={{background: 'rgba(192,57,43,0.2)', filter: 'blur(70px)', animationDuration: '3s'}} />
-              <div className="absolute inset-12 rounded-full animate-pulse" style={{background: 'rgba(243,156,18,0.1)', filter: 'blur(50px)', animationDuration: '4s', animationDelay: '1s'}} />
-
+              <div
+                className="absolute inset-0 rounded-full animate-neon-pulse"
+                style={{ background: 'radial-gradient(circle, rgba(192,57,43,0.25) 0%, transparent 70%)', filter: 'blur(30px)' }}
+              />
               {/* Badges */}
-              <div className="absolute top-4 right-2 sm:top-8 sm:right-4 z-20 bg-[#f39c12] text-black font-bebas text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg"
-                style={{animation: 'floatBadge 3s ease-in-out infinite'}}>
+              <div
+                className="absolute top-4 right-0 font-bebas text-sm px-3 py-1.5 rounded-full z-20 animate-float"
+                style={{ background: '#f1c40f', color: '#000', boxShadow: '0 0 15px rgba(241,196,15,0.6)', animationDelay: '0s' }}
+              >
                 ⭐ BESTSELLER
               </div>
-              <div className="absolute bottom-10 left-0 sm:bottom-16 sm:left-2 z-20 bg-[#c0392b] text-white font-bebas text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg"
-                style={{animation: 'floatBadge 3.5s ease-in-out infinite', animationDelay: '1s'}}>
+              <div
+                className="absolute bottom-12 left-0 font-bebas text-sm px-3 py-1.5 rounded-full z-20 animate-float"
+                style={{ background: '#e74c3c', color: '#fff', boxShadow: '0 0 15px rgba(231,76,60,0.6)', animationDelay: '1s' }}
+              >
                 🔥 PROASPAT
               </div>
-              <div className="absolute top-1/2 -right-2 sm:-right-4 z-20 bg-[#1a1a1a] border border-[#c0392b]/40 text-[#e74c3c] font-bebas text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full"
-                style={{animation: 'floatBadge 4s ease-in-out infinite', animationDelay: '0.5s'}}>
+              <div
+                className="absolute top-1/2 -right-4 font-bebas text-sm px-3 py-1 rounded-full z-20 animate-float"
+                style={{ background: '#080808', border: '1px solid rgba(231,76,60,0.5)', color: '#e74c3c', animationDelay: '0.5s' }}
+              >
                 🌶 PICANT
               </div>
-
-              {/* Shaorma image */}
-              <div className="absolute inset-0 flex items-center justify-center z-10"
-                style={{animation: 'shaormaFloat 4s ease-in-out infinite'}}>
+              {/* Image */}
+              <div
+                className="absolute inset-0 flex items-center justify-center z-10"
+                style={{ animation: 'floatUp 4s ease-in-out infinite' }}
+              >
                 <img
                   src="/shaorma-hero.png"
                   alt="Shaorma Metropolitan"
-                  className="w-[220px] h-[220px] sm:w-[300px] sm:h-[300px] lg:w-[360px] lg:h-[360px] object-contain"
+                  className="object-contain"
                   style={{
-                    filter: 'drop-shadow(0 20px 60px rgba(192,57,43,0.6)) drop-shadow(0 0 40px rgba(243,156,18,0.2))',
-                    animation: 'shaormaRotate 8s ease-in-out infinite',
+                    width: '80%',
+                    height: '80%',
+                    filter: 'drop-shadow(0 20px 50px rgba(192,57,43,0.6)) drop-shadow(0 0 30px rgba(241,196,15,0.2))',
+                    animation: 'rotateGlow 0s, floatUp 4s ease-in-out infinite',
                   }}
                 />
               </div>
 
               <style>{`
-                @keyframes shaormaFloat {
-                  0%, 100% { transform: translateY(0px); }
-                  50% { transform: translateY(-18px); }
-                }
-                @keyframes shaormaRotate {
-                  0%, 100% { transform: rotate(-4deg) scale(1); }
-                  25% { transform: rotate(0deg) scale(1.03); }
-                  50% { transform: rotate(4deg) scale(1); }
-                  75% { transform: rotate(0deg) scale(0.97); }
-                }
-                @keyframes floatBadge {
-                  0%, 100% { transform: translateY(0px); }
-                  50% { transform: translateY(-8px); }
+                @keyframes heroFloat {
+                  0%, 100% { transform: translateY(0) rotate(-3deg); }
+                  50% { transform: translateY(-15px) rotate(3deg); }
                 }
               `}</style>
             </div>
           </div>
-
         </div>
       </div>
     </section>
